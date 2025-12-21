@@ -26,14 +26,9 @@ All files are ready to share with your team TODAY.
 
 ---
 
-## The New Strategy (From Sean)
+## The New Strategy
 
 ### Old Way (Abandoned)
-
-- Build everything simultaneously
-- Complex architecture upfront
-- Overthink the setup
-- Get stuck waiting for perfect hosting
 
 ### New Way (This Is It)
 
@@ -45,13 +40,13 @@ All files are ready to share with your team TODAY.
 
 ---
 
-## What to Do RIGHT NOW (Next 2 Hours)
+## What to Do RIGHT NOW
 
-### Step 1: Read (30 min)
+### Step 1: Read
 
 Open **MASTER_SUMMARY.md** - gives you the complete picture
 
-### Step 2: Assign Team (30 min)
+### Step 2: Assign Team
 
 Share **TEAM_ASSIGNMENTS_UPDATED.md** with team. Clarify who owns what:
 
@@ -61,7 +56,7 @@ Share **TEAM_ASSIGNMENTS_UPDATED.md** with team. Clarify who owns what:
 - Jonah + Apex = Support & review
 - You = Lead, coordinate, make decisions
 
-### Step 3: Plan Execution (1 hour)
+### Step 3: Plan Execution
 
 Review **WEEK_1_EXECUTION_PLAN.md** with team:
 
@@ -69,7 +64,7 @@ Review **WEEK_1_EXECUTION_PLAN.md** with team:
 - Tue-Thu = Build (Michael, Gabriel, Jared in parallel)
 - Friday = Demo & polish
 
-### Step 4: Clarify Standards (30 min)
+### Step 4: Clarify Standards
 
 Discuss:
 
@@ -93,8 +88,8 @@ Discuss:
 
 - 6 people, clear roles
 - Backend + Frontend work in parallel (no blockers)
-- Daily standup (10 AM, async in Slack)
-- Meetings: Mon 9am, Wed 2pm, Fri 2pm + demo
+- Daily standup (TBD AM, async in Slack)
+- Meetings: Mon 5pm, Tue 11am, Wed 5pm, Fri 5pm + demo
 
 **What's NOT Being Done:**
 
@@ -134,7 +129,7 @@ Discuss:
 - Then: Help your track lead when needed
 - Reference: GIT_WORKFLOW.md for how to commit
 
-### Type 3: The Leader (You)
+### Type 3: The Lead (You)
 
 - Read: Everything above
 - Share: TEAM_ASSIGNMENTS_UPDATED.md with team
