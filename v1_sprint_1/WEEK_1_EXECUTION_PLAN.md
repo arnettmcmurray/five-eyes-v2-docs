@@ -1,6 +1,7 @@
 # Week 1 Execution Plan: Get Chatbot Working
 
 ## The Goal
+
 **By Friday: Chatbot works end-to-end in V1 dashboard**
 
 User clicks button → Types message → Gets smart response in UI
@@ -43,7 +44,7 @@ PRIORITY 4 (Thu-Fri)
 
 ```
 MONDAY (Date)
-[Your Name]: 
+[Your Name]:
 - Yesterday: [what you finished, or N/A if first day]
 - Today: [what you're working on]
 - Blockers: [anything stopping you, or "none"]
@@ -67,6 +68,7 @@ Gabriel:
 **All Team:** Get V1 running
 
 ### Your Checklist
+
 - [ ] Clone V1 repo
 - [ ] Navigate to project directory
 - [ ] Install all dependencies (`npm install` or similar)
@@ -78,6 +80,7 @@ Gabriel:
 ### Expected Time: 1-2 hours per person
 
 **If stuck:**
+
 1. Check V1 repo README
 2. Ask in team Slack
 3. Tag Arnett if totally blocked
@@ -89,6 +92,7 @@ Gabriel:
 ### Michael (Backend)
 
 **Tasks:**
+
 1. Create `backend/routers/chat.py` (template provided)
 2. Update `backend/main.py` to register new router
 3. Install `openai` package: `pip install openai`
@@ -102,6 +106,7 @@ curl -X POST http://localhost:8000/api/chat \
 ```
 
 **Expected Response:**
+
 ```json
 {
   "response": "SPF is like a mailbox lock. It says which servers are allowed to send emails from your domain..."
@@ -109,6 +114,7 @@ curl -X POST http://localhost:8000/api/chat \
 ```
 
 **Checklist:**
+
 - [ ] Endpoint created
 - [ ] OpenAI integrated
 - [ ] Knowledge base loading
@@ -116,7 +122,8 @@ curl -X POST http://localhost:8000/api/chat \
 - [ ] Error handling working
 - [ ] Post results in Slack
 
-**If stuck:** 
+**If stuck:**
+
 - Check the backend template code
 - Verify OPENAI_API_KEY is set
 - Test with simple message first
@@ -127,6 +134,7 @@ curl -X POST http://localhost:8000/api/chat \
 ### Gabriel (Frontend)
 
 **Tasks:**
+
 1. Create `frontend/src/components/ChatBot/` folder
 2. Copy provided `ChatBot.tsx` into folder
 3. Copy provided `ChatBot.css` into folder
@@ -135,6 +143,7 @@ curl -X POST http://localhost:8000/api/chat \
 6. Test styling in browser
 
 **Files to create:**
+
 ```
 frontend/src/components/ChatBot/
 ├── ChatBot.tsx    (provided template)
@@ -142,21 +151,23 @@ frontend/src/components/ChatBot/
 ```
 
 **Integration in main layout:**
+
 ```typescript
 // frontend/src/layouts/MainLayout.tsx (or App.tsx)
-import ChatBot from '../components/ChatBot/ChatBot';
+import ChatBot from "../components/ChatBot/ChatBot";
 
 export default function MainLayout() {
   return (
     <div>
       {/* existing layout */}
-      <ChatBot />  {/* Add this */}
+      <ChatBot /> {/* Add this */}
     </div>
   );
 }
 ```
 
 **Checklist:**
+
 - [ ] ChatBot folder created
 - [ ] Files copied
 - [ ] Component imported
@@ -165,6 +176,7 @@ export default function MainLayout() {
 - [ ] Post screenshot in Slack
 
 **If stuck:**
+
 - Check React import paths
 - Verify CSS is linked correctly
 - Test component renders (no errors in console)
@@ -175,35 +187,42 @@ export default function MainLayout() {
 ### Jared (Knowledge Base)
 
 **Tasks:**
+
 1. Review V1 structure for training content
 2. Create simple knowledge base file (markdown)
 3. Organize content for Michael to load
 4. Document file structure for team
 
-**Deliverable:** 
+**Deliverable:**
 Simple file like `backend/knowledge_base.md` with:
+
 - Email security concepts
 - Phishing detection tips
 - Password security basics
 - Clear, simple language
 
 **Format:**
+
 ```markdown
 # Training Content
 
 ## Email Security
 
 ### SPF (Sender Policy Framework)
+
 Think of SPF like a mailbox lock...
 
 ### DKIM (DomainKeys)
+
 DKIM is like a tamper-proof seal...
 
 ## Phishing Detection
+
 Red flags to watch for...
 ```
 
 **Checklist:**
+
 - [ ] Content gathered from V1
 - [ ] Formatted simply (no jargon)
 - [ ] Saved as markdown or text file
@@ -215,7 +234,9 @@ Red flags to watch for...
 ## Wednesday: Integration Day
 
 ### Michael
+
 **Tasks:**
+
 - Load knowledge base from Jared's file
 - Verify responses use the knowledge
 - Add error handling
@@ -223,6 +244,7 @@ Red flags to watch for...
 - Test with multiple messages
 
 **Checklist:**
+
 - [ ] Knowledge base loads
 - [ ] Responses reference it
 - [ ] Errors handled gracefully
@@ -232,7 +254,9 @@ Red flags to watch for...
 ---
 
 ### Gabriel
+
 **Tasks:**
+
 - Once Michael's API is ready: connect component to backend
 - Add API call to ChatBot component
 - Test message sending
@@ -240,12 +264,13 @@ Red flags to watch for...
 - Add loading states
 
 **Key Code:**
+
 ```typescript
 const handleSendMessage = async (message: string) => {
-  const response = await fetch('/api/chat', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message })
+  const response = await fetch("/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message }),
   });
   const data = await response.json();
   return data.response;
@@ -253,6 +278,7 @@ const handleSendMessage = async (message: string) => {
 ```
 
 **Checklist:**
+
 - [ ] API call working
 - [ ] Messages sending
 - [ ] Responses displaying
@@ -262,7 +288,9 @@ const handleSendMessage = async (message: string) => {
 ---
 
 ### Jonah & Apex
+
 **Tasks:**
+
 - Review code together
 - Test full flow
 - Check for bugs
@@ -274,6 +302,7 @@ const handleSendMessage = async (message: string) => {
 ## Thursday: Testing & Polish
 
 **All Team:**
+
 1. Test chatbot with real messages
 2. Verify answer-prevention works
 3. Check UI looks good
@@ -281,6 +310,7 @@ const handleSendMessage = async (message: string) => {
 5. Fix bugs
 
 **Test Cases:**
+
 ```
 Test 1: Normal Question
 Message: "How does DKIM work?"
@@ -301,6 +331,7 @@ Expected: Coherent conversation
 ```
 
 **Checklist:**
+
 - [ ] Normal questions work well
 - [ ] Answer-seeking detection works
 - [ ] No crashes or errors
@@ -317,6 +348,7 @@ Expected: Coherent conversation
 **Afternoon:** Demo to stakeholders/team
 
 ### Demo Script (5 minutes)
+
 1. "Here's the chatbot" (show button)
 2. "Ask it a normal question" (click → "How does SPF work?")
 3. "It knows the content" (show response)
@@ -324,7 +356,8 @@ Expected: Coherent conversation
 5. "It refuses and teaches instead" (show response)
 6. "Ask follow-up question" (show memory working)
 
-### Success = 
+### Success =
+
 ✅ Works without crashing
 ✅ Responds intelligently
 ✅ Refuses to give answers
@@ -337,13 +370,13 @@ Expected: Coherent conversation
 
 **If these don't happen, EVERYTHING stops:**
 
-| Blocker | Impact | Owner | Fix |
-|---------|--------|-------|-----|
-| V1 won't run locally | Can't code | Arnett | Debug setup |
-| OPENAI_API_KEY missing | Backend stuck | Arnett | Provide key |
-| Michael's endpoint fails | Gabriel can't integrate | Michael | Debug OpenAI call |
-| Gabriel's component won't render | Can't see chatbot | Gabriel | Debug React errors |
-| Knowledge base not loaded | Responses are generic | Jared | Debug file loading |
+| Blocker                          | Impact                  | Owner   | Fix                |
+| -------------------------------- | ----------------------- | ------- | ------------------ |
+| V1 won't run locally             | Can't code              | Arnett  | Debug setup        |
+| OPENAI_API_KEY missing           | Backend stuck           | Arnett  | Provide key        |
+| Michael's endpoint fails         | Gabriel can't integrate | Michael | Debug OpenAI call  |
+| Gabriel's component won't render | Can't see chatbot       | Gabriel | Debug React errors |
+| Knowledge base not loaded        | Responses are generic   | Jared   | Debug file loading |
 
 **Rule:** If blocker > 1 hour, ask Arnett immediately.
 
@@ -352,6 +385,7 @@ Expected: Coherent conversation
 ## Time Management
 
 ### Michael's Estimate
+
 - Endpoint creation: 2 hours
 - OpenAI integration: 1 hour
 - Knowledge base loading: 1 hour
@@ -359,6 +393,7 @@ Expected: Coherent conversation
 - **Total: ~6 hours** (spread across Tue-Thu)
 
 ### Gabriel's Estimate
+
 - Component build: 2 hours
 - Styling: 1 hour
 - API integration: 1 hour
@@ -366,12 +401,14 @@ Expected: Coherent conversation
 - **Total: ~5 hours** (start Wed after Michael's endpoint)
 
 ### Jared's Estimate
+
 - Content gathering: 1 hour
 - Formatting: 1 hour
 - Documentation: 30 min
 - **Total: ~2.5 hours** (Tue-Wed)
 
 ### Jonah + Apex Estimate
+
 - Code review: 1 hour
 - Testing: 1-2 hours
 - Bug fixes: 1-2 hours
@@ -382,6 +419,7 @@ Expected: Coherent conversation
 ## What NOT to Do This Week
 
 🚫 Don't work on:
+
 - V2 architecture
 - Payment processing
 - Complex auth
@@ -390,6 +428,7 @@ Expected: Coherent conversation
 - "Perfect" code
 
 ✅ Do work on:
+
 - Chatbot works
 - Responses are good
 - Code is clean enough
@@ -416,17 +455,20 @@ If you have all 7, Week 1 is a win.
 ## Communication Rules This Week
 
 **Slack:**
+
 - Daily standup by 10 AM
 - Questions: Ask immediately, don't wait
 - Blockers: Tag Arnett same day
 - Wins: Celebrate in #general
 
 **Meetings:**
+
 - Monday 9 AM: Kick-off (make sure everyone's running V1)
 - Wednesday 2 PM: Integration check-in
 - Friday 2 PM: Demo & retrospective
 
 **Code:**
+
 - Push to branch first (not main)
 - Post PR in Slack for review
 - Arnett approves before merge
