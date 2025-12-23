@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arnett Project Overview - High Level</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+        background: #0f172a;
+        color: #e2e8f0;
+        min-height: 100vh;
+      }
+
+      .container {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        width: 220px;
+        background: #1e293b;
+        padding: 24px 16px;
+        border-right: 1px solid #334155;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .sidebar h3 {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #64748b;
+        margin-bottom: 16px;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+        font-size: 13px;
+      }
+
+      .legend-dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 3px;
+        margin-right: 12px;
+        flex-shrink: 0;
+      }
+
+      .metrics {
+        margin-top: auto;
+        padding-top: 24px;
+        border-top: 1px solid #334155;
+      }
+
+      .metric {
+        margin-bottom: 20px;
+      }
+
+      .metric-label {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #64748b;
+        margin-bottom: 4px;
+      }
+
+      .metric-value {
+        font-size: 28px;
+        font-weight: 600;
+        color: #f1f5f9;
+      }
+
+      .metric-sub {
+        font-size: 12px;
+        color: #94a3b8;
+      }
+
+      .main {
+        flex: 1;
+        padding: 40px;
+        overflow: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .header h1 {
+        font-size: 32px;
+        font-weight: 700;
+        color: #f8fafc;
+        margin-bottom: 10px;
+      }
+
+      .header p {
+        font-size: 16px;
+        color: #94a3b8;
+      }
+
+      #chart {
+        display: flex;
+        justify-content: center;
+      }
+
+      .node rect {
+        rx: 10;
+        ry: 10;
+        stroke-width: 2;
+      }
+
+      .node-title {
+        font-weight: 600;
+        font-size: 15px;
+      }
+
+      .node-subtitle {
+        font-size: 12px;
+        opacity: 0.85;
+      }
+
+      .link {
+        fill: none;
+        stroke: #475569;
+        stroke-width: 3;
+      }
+
+      .section-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        fill: #64748b;
+        font-weight: 600;
+      }
+
+      .phase-badge {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .footer {
+        margin-top: 40px;
+        text-align: center;
+        padding: 20px;
+        border-top: 1px solid #334155;
+        width: 100%;
+      }
+
+      .footer p {
+        font-size: 14px;
+        color: #64748b;
+        font-style: italic;
+      }
+
+      .footer strong {
+        color: #f1f5f9;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="sidebar">
+        <h3>Legend</h3>
+        <div class="legend-item">
+          <div class="legend-dot" style="background: #3b82f6"></div>
+          <span>What We Have</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background: #8b5cf6"></div>
+          <span>Phase 1: Setup</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background: #f97316"></div>
+          <span>Phase 2: Core</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background: #06b6d4"></div>
+          <span>Phase 3: Smart</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background: #10b981"></div>
+          <span>Phase 4: Builder</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background: #22c55e"></div>
+          <span>Demo Day</span>
+        </div>
+
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-label">Timeline</div>
+            <div class="metric-value">5</div>
+            <div class="metric-sub">Weeks</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Goal</div>
+            <div class="metric-value">1</div>
+            <div class="metric-sub">Working Chatbot</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Philosophy</div>
+            <div class="metric-value" style="font-size: 16px; line-height: 1.4">
+              Prove each step
+            </div>
+            <div class="metric-sub">before building the next</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="main">
+        <div class="header">
+          <h1>Arnett Project Overview</h1>
+          <p>Cybersecurity AI Chatbot — From Inherited Dashboard to Demo Day</p>
+        </div>
+        <div id="chart"></div>
+        <div class="footer">
+          <p>
+            <strong>The Rule:</strong> If it's Week 3 and the chatbot doesn't
+            work, stop everything else. All hands on the chatbot.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const width = 900;
+      const height = 950;
+
+      const svg = d3
+        .select("#chart")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+      // Define arrow marker
+      svg
+        .append("defs")
+        .append("marker")
+        .attr("id", "arrowhead")
+        .attr("viewBox", "-0 -5 10 10")
+        .attr("refX", 8)
+        .attr("refY", 0)
+        .attr("orient", "auto")
+        .attr("markerWidth", 8)
+        .attr("markerHeight", 8)
+        .append("path")
+        .attr("d", "M 0,-5 L 10,0 L 0,5")
+        .attr("fill", "#475569");
+
+      // Colors
+      const colors = {
+        have: "#3b82f6",
+        phase1: "#8b5cf6",
+        phase2: "#f97316",
+        phase3: "#06b6d4",
+        phase4: "#10b981",
+        outcome: "#22c55e",
+      };
+
+      // Section labels
+      svg
+        .append("text")
+        .attr("x", 40)
+        .attr("y", 30)
+        .attr("class", "section-label")
+        .text("WHAT WE HAVE");
+
+      svg
+        .append("text")
+        .attr("x", 40)
+        .attr("y", 200)
+        .attr("class", "section-label")
+        .text("WHAT WE'RE BUILDING");
+
+      svg
+        .append("text")
+        .attr("x", 40)
+        .attr("y", 820)
+        .attr("class", "section-label")
+        .text("WHERE WE'RE GOING");
+
+      // Nodes
+      const nodes = [
+        // What we have
+        {
+          id: "dashboard",
+          x: 350,
+          y: 70,
+          w: 220,
+          h: 90,
+          color: colors.have,
+          title: "Five Eyes Dashboard",
+          subtitle: "Working React + FastAPI app\nwith training content & auth",
+          badge: "INHERITED",
+        },
+
+        // The 4 phases - vertical flow
+        {
+          id: "phase1",
+          x: 350,
+          y: 250,
+          w: 220,
+          h: 90,
+          color: colors.phase1,
+          title: "Phase 1: Foundation",
+          subtitle: "Everyone runs dashboard locally",
+          badge: "WEEK 1",
+        },
+
+        {
+          id: "phase2",
+          x: 350,
+          y: 400,
+          w: 220,
+          h: 90,
+          color: colors.phase2,
+          title: "Phase 2: Core Chatbot",
+          subtitle: "Build chat UI + API + OpenAI\nTHIS IS THE PROJECT",
+          badge: "WEEK 2",
+        },
+
+        {
+          id: "phase3",
+          x: 350,
+          y: 550,
+          w: 220,
+          h: 90,
+          color: colors.phase3,
+          title: "Phase 3: Smart Chatbot",
+          subtitle: "Add memory, context awareness\nand user sessions",
+          badge: "WEEK 3-4",
+        },
+
+        {
+          id: "phase4",
+          x: 350,
+          y: 700,
+          w: 220,
+          h: 90,
+          color: colors.phase4,
+          title: "Phase 4: Builder Engine",
+          subtitle: "Questionnaire → AI generates\ncustom training content",
+          badge: "WEEK 4-5",
+        },
+
+        // Outcome
+        {
+          id: "demo",
+          x: 350,
+          y: 860,
+          w: 220,
+          h: 70,
+          color: colors.outcome,
+          title: "Demo Day",
+          subtitle: "Working chatbot in dashboard",
+          badge: "SUCCESS",
+        },
+      ];
+
+      // Links
+      const links = [
+        { source: "dashboard", target: "phase1" },
+        { source: "phase1", target: "phase2" },
+        { source: "phase2", target: "phase3" },
+        { source: "phase3", target: "phase4" },
+        { source: "phase4", target: "demo" },
+      ];
+
+      // Helper functions
+      function getNodeEdge(nodeId, direction) {
+        const node = nodes.find((n) => n.id === nodeId);
+        switch (direction) {
+          case "top":
+            return { x: node.x + node.w / 2, y: node.y };
+          case "bottom":
+            return { x: node.x + node.w / 2, y: node.y + node.h };
+          default:
+            return { x: node.x + node.w / 2, y: node.y + node.h / 2 };
+        }
+      }
+
+      // Draw links
+      links.forEach((link) => {
+        const start = getNodeEdge(link.source, "bottom");
+        const end = getNodeEdge(link.target, "top");
+
+        svg
+          .append("path")
+          .attr("class", "link")
+          .attr(
+            "d",
+            `M ${start.x} ${start.y} L ${start.x} ${(start.y + end.y) / 2} L ${
+              end.x
+            } ${(start.y + end.y) / 2} L ${end.x} ${end.y}`
+          )
+          .attr("marker-end", "url(#arrowhead)");
+      });
+
+      // Draw nodes
+      const nodeGroups = svg
+        .selectAll(".node")
+        .data(nodes)
+        .enter()
+        .append("g")
+        .attr("class", "node")
+        .attr("transform", (d) => `translate(${d.x}, ${d.y})`);
+
+      // Node rectangles
+      nodeGroups
+        .append("rect")
+        .attr("width", (d) => d.w)
+        .attr("height", (d) => d.h)
+        .attr("fill", (d) => d.color + "20")
+        .attr("stroke", (d) => d.color);
+
+      // Badges
+      nodeGroups
+        .filter((d) => d.badge)
+        .append("rect")
+        .attr("x", (d) => (d.w - d.badge.length * 7 - 16) / 2)
+        .attr("y", 10)
+        .attr("width", (d) => d.badge.length * 7 + 16)
+        .attr("height", 18)
+        .attr("rx", 4)
+        .attr("fill", (d) => d.color);
+
+      nodeGroups
+        .filter((d) => d.badge)
+        .append("text")
+        .attr("class", "phase-badge")
+        .attr("x", (d) => d.w / 2)
+        .attr("y", 23)
+        .attr("text-anchor", "middle")
+        .attr("fill", "#fff")
+        .text((d) => d.badge);
+
+      // Node titles
+      nodeGroups
+        .append("text")
+        .attr("class", "node-title")
+        .attr("x", (d) => d.w / 2)
+        .attr("y", 42)
+        .attr("text-anchor", "middle")
+        .attr("fill", (d) => d.color)
+        .text((d) => d.title);
+
+      // Node subtitles (handle multiline)
+      nodeGroups.each(function (d) {
+        const lines = d.subtitle.split("\n");
+        const g = d3.select(this);
+        lines.forEach((line, i) => {
+          g.append("text")
+            .attr("class", "node-subtitle")
+            .attr("x", d.w / 2)
+            .attr("y", 60 + i * 16)
+            .attr("text-anchor", "middle")
+            .attr("fill", "#94a3b8")
+            .text(line);
+        });
+      });
+
+      // Phase completion goals - RIGHT SIDE
+      const phaseGoals = [
+        {
+          phase: "phase1",
+          goals: ["Docker running", "Dashboard accessible", "Team can develop"],
+        },
+        {
+          phase: "phase2",
+          goals: [
+            "Chat UI in dashboard",
+            "API calls OpenAI",
+            "Bot knows content",
+          ],
+        },
+        {
+          phase: "phase3",
+          goals: [
+            "Remembers conversation",
+            "Knows current page",
+            "Tied to user login",
+          ],
+        },
+        {
+          phase: "phase4",
+          goals: [
+            "Questionnaire works",
+            "AI generates content",
+            "Dynamic KB loading",
+          ],
+        },
+        { phase: "demo", goals: ["Click → Ask → Answer", "Impressive demo"] },
+      ];
+
+      phaseGoals.forEach((pg) => {
+        const node = nodes.find((n) => n.id === pg.phase);
+        const startX = node.x + node.w + 30;
+        const startY = node.y + 20;
+
+        // Connector line
+        svg
+          .append("line")
+          .attr("x1", node.x + node.w)
+          .attr("y1", node.y + node.h / 2)
+          .attr("x2", startX - 10)
+          .attr("y2", node.y + node.h / 2)
+          .attr("stroke", "#334155")
+          .attr("stroke-width", 1)
+          .attr("stroke-dasharray", "3,3");
+
+        // Goals list
+        pg.goals.forEach((goal, i) => {
+          svg
+            .append("text")
+            .attr("x", startX)
+            .attr("y", startY + i * 22)
+            .attr("font-size", "12px")
+            .attr("fill", "#94a3b8")
+            .text("✓ " + goal);
+        });
+      });
+
+      // Add "CRITICAL" marker next to Phase 2
+      svg
+        .append("rect")
+        .attr("x", 120)
+        .attr("y", 420)
+        .attr("width", 100)
+        .attr("height", 30)
+        .attr("rx", 4)
+        .attr("fill", "#ef444430")
+        .attr("stroke", "#ef4444");
+
+      svg
+        .append("text")
+        .attr("x", 170)
+        .attr("y", 440)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "11px")
+        .attr("font-weight", "700")
+        .attr("fill", "#ef4444")
+        .text("CRITICAL");
+
+      // Draw line from critical to phase 2
+      svg
+        .append("line")
+        .attr("x1", 220)
+        .attr("y1", 435)
+        .attr("x2", 350)
+        .attr("y2", 435)
+        .attr("stroke", "#ef4444")
+        .attr("stroke-width", 2)
+        .attr("stroke-dasharray", "4,4");
+    </script>
+  </body>
+</html>

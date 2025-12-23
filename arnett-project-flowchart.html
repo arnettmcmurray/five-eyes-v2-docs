@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arnett Team Guide - Project Flowchart</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+        background: #0f172a;
+        color: #e2e8f0;
+        min-height: 100vh;
+      }
+
+      .container {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        width: 200px;
+        background: #1e293b;
+        padding: 24px 16px;
+        border-right: 1px solid #334155;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .sidebar h3 {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #64748b;
+        margin-bottom: 16px;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        font-size: 12px;
+      }
+
+      .legend-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+        margin-right: 10px;
+        flex-shrink: 0;
+      }
+
+      .metrics {
+        margin-top: auto;
+        padding-top: 24px;
+        border-top: 1px solid #334155;
+      }
+
+      .metric {
+        margin-bottom: 16px;
+      }
+
+      .metric-label {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #64748b;
+        margin-bottom: 4px;
+      }
+
+      .metric-value {
+        font-size: 24px;
+        font-weight: 600;
+        color: #f1f5f9;
+      }
+
+      .metric-sub {
+        font-size: 11px;
+        color: #94a3b8;
+      }
+
+      .main {
+        flex: 1;
+        padding: 32px;
+        overflow: auto;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 32px;
+      }
+
+      .header h1 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #f8fafc;
+        margin-bottom: 8px;
+      }
+
+      .header p {
+        font-size: 14px;
+        color: #94a3b8;
+      }
+
+      #chart {
+        display: flex;
+        justify-content: center;
+      }
+
+      .node rect {
+        rx: 8;
+        ry: 8;
+        stroke-width: 2;
+      }
+
+      .node text {
+        font-size: 12px;
+        font-weight: 500;
+      }
+
+      .node-title {
+        font-weight: 600;
+        font-size: 13px;
+      }
+
+      .node-subtitle {
+        font-size: 11px;
+        opacity: 0.85;
+      }
+
+      .link {
+        fill: none;
+        stroke: #475569;
+        stroke-width: 2;
+      }
+
+      .link-arrow {
+        fill: #475569;
+      }
+
+      .section-label {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        fill: #64748b;
+        font-weight: 600;
+      }
+
+      .phase-badge {
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .checkpoint-line {
+        stroke: #334155;
+        stroke-width: 1;
+        stroke-dasharray: 4, 4;
+      }
+
+      .checkpoint-label {
+        font-size: 10px;
+        fill: #64748b;
+        font-weight: 500;
+      }
+
+      .footer {
+        position: fixed;
+        bottom: 0;
+        left: 200px;
+        right: 0;
+        background: #1e293b;
+        border-top: 1px solid #334155;
+        padding: 16px 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .footer-info {
+        font-size: 12px;
+        color: #94a3b8;
+      }
+
+      .footer-owner {
+        font-size: 12px;
+        color: #64748b;
+      }
+
+      .footer-owner strong {
+        color: #f1f5f9;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="sidebar">
+        <h3>Legend</h3>
+        <div class="legend-item">
+          <div class="legend-dot" style="background: #3b82f6"></div>
+          <span>Data Source</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background: #8b5cf6"></div>
+          <span>Foundation</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background: #f97316"></div>
+          <span>Core Build</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background: #06b6d4"></div>
+          <span>Enhancement</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background: #10b981"></div>
+          <span>Stretch Goal</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background: #22c55e"></div>
+          <span>Outcome</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background: #ef4444"></div>
+          <span>Excluded/Stop</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background: #eab308"></div>
+          <span>Checkpoint</span>
+        </div>
+
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-label">Timeline</div>
+            <div class="metric-value">5</div>
+            <div class="metric-sub">Weeks to Demo Day</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Phases</div>
+            <div class="metric-value">4</div>
+            <div class="metric-sub">Sequential stages</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Team Tracks</div>
+            <div class="metric-value">4</div>
+            <div class="metric-sub">Parallel workstreams</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Deliverables</div>
+            <div class="metric-value">37</div>
+            <div class="metric-sub">Guide documents</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="main">
+        <div class="header">
+          <h1>Arnett Team Guide - Project Flow</h1>
+          <p>
+            Cybersecurity AI Chatbot Integration | Five Eyes Dashboard | 5-Week
+            Sprint
+          </p>
+        </div>
+        <div id="chart"></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="footer-info">Project Period: Week 1 - Week 5 (Demo Day)</div>
+      <div class="footer-owner">
+        <strong>Philosophy:</strong> Prove each step before building the next
+      </div>
+    </div>
+
+    <script>
+      const width = 1100;
+      const height = 2800;
+
+      const svg = d3
+        .select("#chart")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+      // Define arrow marker
+      svg
+        .append("defs")
+        .append("marker")
+        .attr("id", "arrowhead")
+        .attr("viewBox", "-0 -5 10 10")
+        .attr("refX", 8)
+        .attr("refY", 0)
+        .attr("orient", "auto")
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .append("path")
+        .attr("d", "M 0,-5 L 10,0 L 0,5")
+        .attr("fill", "#475569");
+
+      // Colors
+      const colors = {
+        dataSource: "#3b82f6",
+        foundation: "#8b5cf6",
+        coreBuild: "#f97316",
+        enhancement: "#06b6d4",
+        stretchGoal: "#10b981",
+        outcome: "#22c55e",
+        excluded: "#ef4444",
+        checkpoint: "#eab308",
+        track: "#64748b",
+      };
+
+      // Section labels - MUCH MORE expanded spacing
+      const sections = [
+        { y: 30, label: "DATA SOURCE" },
+        { y: 280, label: "FOUNDATION" },
+        { y: 580, label: "CORE BUILD (THE PROJECT)" },
+        { y: 1100, label: "TEAM TRACKS" },
+        { y: 1400, label: "ENHANCEMENT" },
+        { y: 1820, label: "STRETCH GOAL" },
+        { y: 2240, label: "OUTCOMES" },
+      ];
+
+      sections.forEach((s) => {
+        svg
+          .append("text")
+          .attr("x", 20)
+          .attr("y", s.y)
+          .attr("class", "section-label")
+          .text(s.label);
+      });
+
+      // Draw checkpoint lines - MUCH MORE expanded spacing
+      const checkpoints = [
+        { y: 460, label: "Week 1: Everyone runs dashboard" },
+        { y: 1020, label: "Week 2: Chatbot works end-to-end" },
+        { y: 1320, label: "Week 3 CHECKPOINT: Priority 2 done or STOP" },
+        { y: 1720, label: "Week 3-4: Smart features" },
+        { y: 2140, label: "Week 4-5: Builder engine" },
+        { y: 2500, label: "Week 5: Demo Day" },
+      ];
+
+      checkpoints.forEach((cp) => {
+        svg
+          .append("line")
+          .attr("x1", 180)
+          .attr("y1", cp.y)
+          .attr("x2", width - 20)
+          .attr("y2", cp.y)
+          .attr("class", "checkpoint-line");
+
+        svg
+          .append("text")
+          .attr("x", width - 25)
+          .attr("y", cp.y - 5)
+          .attr("class", "checkpoint-label")
+          .attr("text-anchor", "end")
+          .text(cp.label);
+      });
+
+      // Nodes definition - MUCH MORE EXPANDED VERTICAL SPACING
+      const nodes = [
+        // Data Sources - MOVED LEFT TO MAKE ROOM FOR RED FLAGS
+        {
+          id: "dashboard",
+          x: 250,
+          y: 80,
+          w: 190,
+          h: 80,
+          color: colors.dataSource,
+          title: "Five Eyes Dashboard",
+          subtitle: "Inherited - WORKING",
+          badge: "USE THIS",
+        },
+        {
+          id: "scaffolded",
+          x: 500,
+          y: 80,
+          w: 190,
+          h: 80,
+          color: colors.excluded,
+          title: "Scaffolded Repo",
+          subtitle: "Placeholders - NOT WORKING",
+          badge: "IGNORE",
+        },
+
+        // Phase 1 - Foundation - MORE SPACE FROM DATA SOURCE
+        {
+          id: "phase1",
+          x: 450,
+          y: 330,
+          w: 200,
+          h: 80,
+          color: colors.foundation,
+          title: "Phase 1: Foundation",
+          subtitle: "Everyone runs dashboard locally",
+          badge: "PRIORITY 1",
+        },
+
+        // Phase 2 - Core Chatbot - MORE SPACE
+        {
+          id: "phase2",
+          x: 450,
+          y: 640,
+          w: 200,
+          h: 80,
+          color: colors.coreBuild,
+          title: "Phase 2: Core Chatbot",
+          subtitle: "THIS IS THE PROJECT",
+          badge: "PRIORITY 2",
+        },
+
+        // Backend components - MORE VERTICAL SPACE
+        {
+          id: "backend",
+          x: 250,
+          y: 790,
+          w: 150,
+          h: 60,
+          color: colors.coreBuild,
+          title: "Backend",
+          subtitle: "POST /api/chat endpoint",
+        },
+        {
+          id: "openai",
+          x: 250,
+          y: 900,
+          w: 150,
+          h: 55,
+          color: colors.coreBuild,
+          title: "OpenAI Integration",
+          subtitle: "GPT-4 / GPT-3.5",
+        },
+
+        // Frontend components
+        {
+          id: "frontend",
+          x: 475,
+          y: 790,
+          w: 150,
+          h: 60,
+          color: colors.coreBuild,
+          title: "Frontend",
+          subtitle: "ChatWidget.tsx",
+        },
+
+        // Knowledge Base
+        {
+          id: "knowledge",
+          x: 700,
+          y: 790,
+          w: 150,
+          h: 60,
+          color: colors.coreBuild,
+          title: "Knowledge Base",
+          subtitle: "FAQ, Training Content",
+        },
+
+        // Integration - MORE SPACE
+        {
+          id: "integration",
+          x: 475,
+          y: 900,
+          w: 150,
+          h: 55,
+          color: colors.coreBuild,
+          title: "Integration",
+          subtitle: "Full loop works",
+        },
+
+        // Team Tracks - MUCH MORE SPACE
+        {
+          id: "track_fe",
+          x: 200,
+          y: 1150,
+          w: 130,
+          h: 60,
+          color: colors.track,
+          title: "Frontend Track",
+          subtitle: "React, State, CSS",
+        },
+        {
+          id: "track_be",
+          x: 360,
+          y: 1150,
+          w: 130,
+          h: 60,
+          color: colors.track,
+          title: "Backend Track",
+          subtitle: "Python, FastAPI",
+        },
+        {
+          id: "track_int",
+          x: 520,
+          y: 1150,
+          w: 130,
+          h: 60,
+          color: colors.track,
+          title: "Integration Track",
+          subtitle: "Testing, Debug",
+        },
+        {
+          id: "track_content",
+          x: 680,
+          y: 1150,
+          w: 130,
+          h: 60,
+          color: colors.track,
+          title: "Content Track",
+          subtitle: "KB, Demo Script",
+        },
+
+        // Phase 3 - Smart Chatbot - MORE SPACE
+        {
+          id: "phase3",
+          x: 450,
+          y: 1470,
+          w: 200,
+          h: 80,
+          color: colors.enhancement,
+          title: "Phase 3: Smart Chatbot",
+          subtitle: "Memory, Context, Sessions",
+          badge: "PRIORITY 3",
+        },
+
+        // Phase 3 sub-items - MORE SPACE
+        {
+          id: "memory",
+          x: 250,
+          y: 1620,
+          w: 140,
+          h: 55,
+          color: colors.enhancement,
+          title: "Conversation Memory",
+          subtitle: "History persists",
+        },
+        {
+          id: "context",
+          x: 480,
+          y: 1620,
+          w: 140,
+          h: 55,
+          color: colors.enhancement,
+          title: "Context Awareness",
+          subtitle: "Knows current page",
+        },
+        {
+          id: "sessions",
+          x: 710,
+          y: 1620,
+          w: 140,
+          h: 55,
+          color: colors.enhancement,
+          title: "User Sessions",
+          subtitle: "Tied to login",
+        },
+
+        // Phase 4 - Builder Engine - MORE SPACE
+        {
+          id: "phase4",
+          x: 450,
+          y: 1890,
+          w: 200,
+          h: 80,
+          color: colors.stretchGoal,
+          title: "Phase 4: Builder Engine",
+          subtitle: 'The "Wow" Factor',
+          badge: "PRIORITY 4",
+        },
+
+        // Phase 4 sub-items - MORE SPACE
+        {
+          id: "questionnaire",
+          x: 250,
+          y: 2040,
+          w: 140,
+          h: 55,
+          color: colors.stretchGoal,
+          title: "Questionnaire",
+          subtitle: "Captures environment",
+        },
+        {
+          id: "generator",
+          x: 480,
+          y: 2040,
+          w: 140,
+          h: 55,
+          color: colors.stretchGoal,
+          title: "AI Generation",
+          subtitle: "Creates content",
+        },
+        {
+          id: "dynamic",
+          x: 710,
+          y: 2040,
+          w: 140,
+          h: 55,
+          color: colors.stretchGoal,
+          title: "Dynamic Loading",
+          subtitle: "Per-client KB",
+        },
+
+        // Outcomes - MORE SPACE
+        {
+          id: "must_ship",
+          x: 250,
+          y: 2300,
+          w: 160,
+          h: 70,
+          color: colors.outcome,
+          title: "Must Ship",
+          subtitle: "Chatbot in dashboard",
+          badge: "DEMO DAY",
+        },
+        {
+          id: "strong_demo",
+          x: 480,
+          y: 2300,
+          w: 160,
+          h: 70,
+          color: colors.outcome,
+          title: "Strong Demo",
+          subtitle: "Builder generates content",
+          badge: "IMPRESSIVE",
+        },
+        {
+          id: "continue",
+          x: 710,
+          y: 2300,
+          w: 160,
+          h: 70,
+          color: colors.outcome,
+          title: "Continue After",
+          subtitle: "Multi-tenant SaaS",
+          badge: "FUTURE",
+        },
+
+        // Polish - MORE SPACE
+        {
+          id: "polish",
+          x: 450,
+          y: 2560,
+          w: 200,
+          h: 60,
+          color: colors.checkpoint,
+          title: "Priority 5: Polish",
+          subtitle: "Demo script, error handling, UI cleanup",
+        },
+
+        // Red flags box - MOVED RIGHT AND MADE TALLER - ADDED BADGE FOR TOP ALIGNMENT
+        {
+          id: "redflags",
+          x: 760,
+          y: 60,
+          w: 200,
+          h: 200,
+          color: colors.excluded,
+          title: "RED FLAGS",
+          subtitle: "STOP IF DOING:",
+          badge: "WARNING",
+        },
+      ];
+
+      // Links definition
+      const links = [
+        // Main flow
+        { source: "dashboard", target: "phase1" },
+        { source: "phase1", target: "phase2" },
+        { source: "phase2", target: "backend" },
+        { source: "phase2", target: "frontend" },
+        { source: "phase2", target: "knowledge" },
+        { source: "backend", target: "openai" },
+        { source: "frontend", target: "integration" },
+        { source: "openai", target: "integration" },
+        { source: "knowledge", target: "integration" },
+
+        // To tracks
+        { source: "phase1", target: "track_fe", style: "dashed" },
+        { source: "phase1", target: "track_be", style: "dashed" },
+        { source: "phase1", target: "track_int", style: "dashed" },
+        { source: "phase1", target: "track_content", style: "dashed" },
+
+        // Phase 3
+        { source: "integration", target: "phase3" },
+        { source: "phase3", target: "memory" },
+        { source: "phase3", target: "context" },
+        { source: "phase3", target: "sessions" },
+
+        // Phase 4
+        { source: "memory", target: "phase4" },
+        { source: "context", target: "phase4" },
+        { source: "sessions", target: "phase4" },
+        { source: "phase4", target: "questionnaire" },
+        { source: "phase4", target: "generator" },
+        { source: "phase4", target: "dynamic" },
+
+        // Outcomes
+        { source: "integration", target: "must_ship", style: "thick" },
+        { source: "phase3", target: "must_ship" },
+        { source: "questionnaire", target: "strong_demo" },
+        { source: "generator", target: "strong_demo" },
+        { source: "dynamic", target: "strong_demo" },
+        { source: "strong_demo", target: "continue" },
+
+        // Polish
+        { source: "must_ship", target: "polish" },
+        { source: "strong_demo", target: "polish" },
+      ];
+
+      // Draw links
+      function getNodeCenter(nodeId) {
+        const node = nodes.find((n) => n.id === nodeId);
+        return { x: node.x + node.w / 2, y: node.y + node.h / 2 };
+      }
+
+      function getNodeEdge(nodeId, direction) {
+        const node = nodes.find((n) => n.id === nodeId);
+        switch (direction) {
+          case "top":
+            return { x: node.x + node.w / 2, y: node.y };
+          case "bottom":
+            return { x: node.x + node.w / 2, y: node.y + node.h };
+          case "left":
+            return { x: node.x, y: node.y + node.h / 2 };
+          case "right":
+            return { x: node.x + node.w, y: node.y + node.h / 2 };
+          default:
+            return getNodeCenter(nodeId);
+        }
+      }
+
+      links.forEach((link) => {
+        const sourceNode = nodes.find((n) => n.id === link.source);
+        const targetNode = nodes.find((n) => n.id === link.target);
+
+        let start, end;
+
+        // Determine best connection points
+        if (targetNode.y > sourceNode.y + sourceNode.h) {
+          start = getNodeEdge(link.source, "bottom");
+          end = getNodeEdge(link.target, "top");
+        } else if (targetNode.y + targetNode.h < sourceNode.y) {
+          start = getNodeEdge(link.source, "top");
+          end = getNodeEdge(link.target, "bottom");
+        } else if (targetNode.x > sourceNode.x + sourceNode.w) {
+          start = getNodeEdge(link.source, "right");
+          end = getNodeEdge(link.target, "left");
+        } else {
+          start = getNodeEdge(link.source, "left");
+          end = getNodeEdge(link.target, "right");
+        }
+
+        const midY = (start.y + end.y) / 2;
+
+        const path = svg
+          .append("path")
+          .attr("class", "link")
+          .attr(
+            "d",
+            `M ${start.x} ${start.y} C ${start.x} ${midY}, ${end.x} ${midY}, ${end.x} ${end.y}`
+          )
+          .attr("marker-end", "url(#arrowhead)");
+
+        if (link.style === "dashed") {
+          path.attr("stroke-dasharray", "5,5").attr("stroke", "#64748b");
+        } else if (link.style === "thick") {
+          path.attr("stroke-width", 3).attr("stroke", "#22c55e");
+        }
+      });
+
+      // Draw nodes
+      const nodeGroups = svg
+        .selectAll(".node")
+        .data(nodes)
+        .enter()
+        .append("g")
+        .attr("class", "node")
+        .attr("transform", (d) => `translate(${d.x}, ${d.y})`);
+
+      // Node rectangles
+      nodeGroups
+        .append("rect")
+        .attr("width", (d) => d.w)
+        .attr("height", (d) => d.h)
+        .attr("fill", (d) => d.color + "20")
+        .attr("stroke", (d) => d.color);
+
+      // Node titles - MORE VERTICAL SPACING
+      nodeGroups
+        .append("text")
+        .attr("class", "node-title")
+        .attr("x", (d) => d.w / 2)
+        .attr("y", (d) => (d.badge ? 32 : d.h / 2 - 6))
+        .attr("text-anchor", "middle")
+        .attr("fill", (d) => d.color)
+        .text((d) => d.title);
+
+      // Node subtitles - MORE VERTICAL SPACING
+      nodeGroups
+        .append("text")
+        .attr("class", "node-subtitle")
+        .attr("x", (d) => d.w / 2)
+        .attr("y", (d) => (d.badge ? 50 : d.h / 2 + 12))
+        .attr("text-anchor", "middle")
+        .attr("fill", "#94a3b8")
+        .text((d) => d.subtitle);
+
+      // Badges
+      nodeGroups
+        .filter((d) => d.badge)
+        .append("rect")
+        .attr("x", (d) => (d.w - d.badge.length * 6 - 12) / 2)
+        .attr("y", 6)
+        .attr("width", (d) => d.badge.length * 6 + 12)
+        .attr("height", 14)
+        .attr("rx", 3)
+        .attr("fill", (d) => d.color);
+
+      nodeGroups
+        .filter((d) => d.badge)
+        .append("text")
+        .attr("class", "phase-badge")
+        .attr("x", (d) => d.w / 2)
+        .attr("y", 16)
+        .attr("text-anchor", "middle")
+        .attr("fill", "#fff")
+        .text((d) => d.badge);
+
+      // Red flags content - FIXED SPACING
+      const redFlagsNode = nodes.find((n) => n.id === "redflags");
+      const redFlagItems = [
+        "Host before local",
+        "Auth before chatbot",
+        "UI before features",
+        "Planning vs building",
+        "Scaffolded repo work",
+      ];
+
+      redFlagItems.forEach((item, i) => {
+        svg
+          .append("text")
+          .attr("x", redFlagsNode.x + 15)
+          .attr("y", redFlagsNode.y + 90 + i * 22)
+          .attr("font-size", "11px")
+          .attr("fill", "#fca5a5")
+          .text("• " + item);
+      });
+
+      // Week 3 STOP indicator - EXPANDED POSITION
+      svg
+        .append("rect")
+        .attr("x", 180)
+        .attr("y", 1330)
+        .attr("width", 180)
+        .attr("height", 35)
+        .attr("rx", 4)
+        .attr("fill", colors.excluded + "30")
+        .attr("stroke", colors.excluded);
+
+      svg
+        .append("text")
+        .attr("x", 270)
+        .attr("y", 1353)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "11px")
+        .attr("font-weight", "700")
+        .attr("fill", colors.excluded)
+        .text("ALL HANDS IF NOT DONE");
+
+      // Blocking indicator - EXPANDED POSITION
+      svg
+        .append("text")
+        .attr("x", 550)
+        .attr("y", 520)
+        .attr("font-size", "10px")
+        .attr("fill", "#64748b")
+        .attr("text-anchor", "middle")
+        .text("BLOCKS EVERYTHING");
+
+      svg
+        .append("line")
+        .attr("x1", 480)
+        .attr("y1", 510)
+        .attr("x2", 620)
+        .attr("y2", 510)
+        .attr("stroke", "#64748b")
+        .attr("stroke-width", 1);
+    </script>
+  </body>
+</html>
